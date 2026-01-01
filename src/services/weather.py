@@ -27,10 +27,11 @@ def tempo(cidade: str) -> dict | None:
             "vento_kmh": round(data["wind"]["speed"] * 3.6, 1),
             "visibilidade_m": data["visibility"],
             "descricao_tempo": data["weather"][0]["description"],
+            "lat": data["coord"]["lat"],
+            "lon": data["coord"]["lon"],
         }
 
         return resultado
 
     except requests.RequestException as e:
-        print(f"Erro OpenWeather: {e}")
-        return None
+        raise RuntimeError("Erro ao buscar dados do clima") from e
