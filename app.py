@@ -38,6 +38,7 @@ from src.cuidados import (
 )
 
 from src.utils.aqi_mapper import interpretar_aqi
+from src.utils.uv_mapper import interpretar_uv
 
 
 # ===============================
@@ -189,7 +190,11 @@ if buscar:
             )
             col2.metric("Umidade", f"{clima['umidade']}%", "Umidade relativa")
             col3.metric("Vento", f"{clima['vento_kmh']:.0f} km/h", "Velocidade média")
-            col4.metric("Índice UV", f"{uv:.1f}" if uv else "N/D", "Radiação solar")
+
+            # UV com interpretação e valor numérico
+            uv_interpretado = interpretar_uv(uv)
+            uv_valor = f"Índice: {uv:.1f}" if uv is not None else "Sem dados"
+            col4.metric("Índice UV", uv_interpretado, uv_valor)
 
             col5, col6, col7, col8 = st.columns(4)
 
@@ -219,7 +224,7 @@ if buscar:
             r_seco = risco_tempo_seco(clima["umidade"])
             r_ar = risco_poluicao(ar["aqi"], ar["pm2_5"])
             r_vento = risco_vento(clima["vento_kmh"])
-            r_uv = risco_uv(uv) if uv else "BAIXO"
+            r_uv = risco_uv(uv) if uv is not None else "BAIXO"
 
             risco_final = risco_geral(
                 [r_calor, r_calor_umido, r_seco, r_ar, r_vento, r_uv]
@@ -311,9 +316,15 @@ if buscar:
 
                 col5, col6, col7, col8 = st.columns(4)
                 col5.metric("AQI", ar["aqi"])
-                col6.metric("PM2.5", f"{ar['pm2_5']:.1f} µg/m³")
-                col7.metric("PM10", f"{ar['pm10']:.1f} µg/m³")
-                col8.metric("O₃", f"{ar['o3']:.1f} µg/m³")
+                col6.metric("UV Index", f"{uv:.1f}" if uv is not None else "N/D")
+                col7.metric("PM2.5", f"{ar['pm2_5']:.1f} µg/m³")
+                col8.metric("PM10", f"{ar['pm10']:.1f} µg/m³")
+
+                col9, col10, col11, col12 = st.columns(4)
+                col9.metric("O₃", f"{ar['o3']:.1f} µg/m³")
+                col10.metric("CO", f"{ar['co']:.1f} µg/m³")
+                col11.metric("NO₂", f"{ar['no2']:.1f} µg/m³")
+                col12.metric("Visibilidade", f"{clima['visibilidade_m']} m")
 
         except Exception as e:
             st.error("Não foi possível obter as informações da cidade.")
