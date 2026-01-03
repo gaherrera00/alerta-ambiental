@@ -1,0 +1,62 @@
+# Arquivo de ambiente (CRÍTICO - contém API keys)
+.env
+.env.local
+.env.*.local
+
+# Credenciais e segredos
+*.key
+*.pem
+secrets.json
+config/credentials.json
+
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# Distribuição / build
+build/
+dist/
+*.egg-info/
+
+# Banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.cache
