@@ -8,9 +8,9 @@ API_KEY = os.getenv("OPENWEATHER_API_KEY")
 URL = "https://api.openweathermap.org/data/2.5/weather"
 
 
-def tempo(cidade: str) -> dict | None:
+def tempo(cidade: str) -> dict:
     if not API_KEY:
-        raise RuntimeError("API KEY nao encontrada")
+        raise RuntimeError("API KEY não encontrada")
 
     params = {"q": cidade, "appid": API_KEY, "units": "metric", "lang": "pt_br"}
 
