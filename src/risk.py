@@ -58,10 +58,9 @@ def risco_vento(vento_kmh: float) -> str:
 
 
 def risco_poluicao(aqi: int, pm2_5: float) -> str:
-    """Calcula risco da poluição do ar"""
-    if aqi >= 4 or pm2_5 >= 35:
+    if aqi >= 4 or pm2_5 >= 25:
         return "ALTO"
-    elif aqi == 3 or pm2_5 >= 25:
+    elif aqi == 3 or pm2_5 >= 15: 
         return "MÉDIO"
     return "BAIXO"
 

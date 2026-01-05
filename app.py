@@ -37,6 +37,17 @@ from src.cuidados import (
     cuidado_geral,
 )
 
+from src.explicacoes import (
+    explicacao_calor,
+    explicacao_calor_umido,
+    explicacao_tempo_seco,
+    explicacao_poluicao,
+    explicacao_uv,
+    explicacao_vento,
+    explicacao_hidratacao,
+    explicacao_grupos_vulneraveis,
+)
+
 from src.utils.aqi_mapper import interpretar_aqi
 from src.utils.uv_mapper import interpretar_uv
 
@@ -67,7 +78,7 @@ st.set_page_config(
 
 
 # ===============================
-# CSS CUSTOMIZADO (HUMANIZADO)
+# CSS CUSTOMIZADO
 # ===============================
 
 st.markdown(
@@ -107,7 +118,7 @@ st.markdown(
         font-weight: 700;
     }
 
-    h2, h3 {
+    h2, h3, h4 {
         color: #1f2937;
         font-weight: 600;
     }
@@ -115,6 +126,19 @@ st.markdown(
     .stAlert {
         border-radius: 10px;
         border-left: 5px solid;
+    }
+    
+    /* Estilo para as explicações científicas */
+    .explicacao-cientifica {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        padding: 1.2rem;
+        border-radius: 10px;
+        border-left: 4px solid #0ea5e9;
+        margin-top: 0.8rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: black;
     }
 </style>
 """,
@@ -250,50 +274,94 @@ if buscar:
             st.divider()
 
             # ===============================
-            # ANÁLISE DETALHADA
+            # EXPLICAÇÕES EDUCATIVAS GERAIS
+            # ===============================
+
+            with st.expander("💡 Informações importantes sobre saúde ambiental"):
+                st.markdown(explicacao_hidratacao())
+                st.markdown("---")
+                st.markdown(explicacao_grupos_vulneraveis())
+
+            st.divider()
+
+            # ===============================
+            # ANÁLISE DETALHADA COM EXPLICAÇÕES
             # ===============================
 
             st.markdown("### O que merece atenção hoje")
 
             alertas = [
-                ("Calor", r_calor, atencao_calor(r_calor), cuidado_calor(r_calor)),
+                (
+                    "Calor",
+                    r_calor,
+                    atencao_calor(r_calor),
+                    cuidado_calor(r_calor),
+                    explicacao_calor(r_calor),
+                ),
                 (
                     "Calor úmido",
                     r_calor_umido,
                     atencao_calor_umido(r_calor_umido),
                     cuidado_calor_umido(r_calor_umido),
+                    explicacao_calor_umido(r_calor_umido),
                 ),
                 (
                     "Ar seco",
                     r_seco,
                     atencao_tempo_seco(r_seco),
                     cuidado_tempo_seco(r_seco),
+                    explicacao_tempo_seco(r_seco),
                 ),
                 (
                     "Qualidade do ar",
                     r_ar,
                     atencao_poluicao(r_ar),
                     cuidado_poluicao(r_ar),
+                    explicacao_poluicao(r_ar),
                 ),
-                ("Vento", r_vento, atencao_vento(r_vento), cuidado_vento(r_vento)),
-                ("Radiação UV", r_uv, atencao_uv(r_uv), cuidado_uv(r_uv)),
+                (
+                    "Vento",
+                    r_vento,
+                    atencao_vento(r_vento),
+                    cuidado_vento(r_vento),
+                    explicacao_vento(r_vento),
+                ),
+                (
+                    "Radiação UV",
+                    r_uv,
+                    atencao_uv(r_uv),
+                    cuidado_uv(r_uv),
+                    explicacao_uv(r_uv),
+                ),
             ]
 
+            # Filtra apenas alertas relevantes
             alertas = [a for a in alertas if a[1] != "BAIXO" or a[3]]
 
             if alertas:
                 col_left, col_right = st.columns(2)
 
-                for i, (nome, risco, atencao, cuidado) in enumerate(alertas):
+                for i, (nome, risco, atencao, cuidado, explicacao) in enumerate(
+                    alertas
+                ):
                     with col_left if i % 2 == 0 else col_right:
                         st.markdown(f"#### {nome}")
                         st.caption(f"Nível de atenção: {risco}")
 
                         if atencao:
-                            st.info(atencao)
+                            st.info(f"**O que pode acontecer:** {atencao}")
 
                         if cuidado:
-                            getattr(st, get_risco_color(risco))(cuidado)
+                            getattr(st, get_risco_color(risco))(
+                                f"**Como se proteger:** {cuidado}"
+                            )
+
+                        # Adiciona explicação científica se disponível
+                        if explicacao:
+                            st.markdown(
+                                f'<div class="explicacao-cientifica">{explicacao}</div>',
+                                unsafe_allow_html=True,
+                            )
 
                         st.markdown("<br>", unsafe_allow_html=True)
             else:
@@ -307,7 +375,7 @@ if buscar:
 
             st.divider()
 
-            with st.expander("Ver dados técnicos completos"):
+            with st.expander("📊 Ver dados técnicos completos"):
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("Temperatura", f"{clima['temperatura']:.1f}°C")
                 col2.metric("Sensação térmica", f"{clima['sensacao_termica']:.1f}°C")
