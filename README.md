@@ -107,4 +107,6 @@ Contribuições são muito bem-vindas! Se você tem sugestões de melhoria, nova
 
 Gabriel Herrera Demarchi – [gabriel.h.demarchi@gmail.com](mailto:gabriel.h.demarchi@gmail.com)
 
+Deploy - [https://alerta-ambiental-3r9phucbyvoenqpatxxsvm.streamlit.app/](https://alerta-ambiental-3r9phucbyvoenqpatxxsvm.streamlit.app/)
+
 Link do Projeto: [https://github.com/seu-usuario/alerta-ambiental](https://github.com/seu-usuario/alerta-ambiental)
